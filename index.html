@@ -289,8 +289,8 @@
                   <span class="text-[10px] text-pink-100/60">pinkie craft Land • Season 2</span>
                 </div>
                 <div class="rounded-xl overflow-hidden border border-white/10 bg-black relative">
-                  <video class="w-full h-56 sm:h-64 object-cover" autoplay muted loop playsinline>
-                    <source src="https://cdn.discordapp.com/attachments/1453798097623715851/1454183579104968848/hero-smp.mp4?ex=6950297e&is=694ed7fe&hm=aa4c4d0082f1b58b9daa5beb594505b77b2dc4d9ec14dc55be976bbe2f37b33f&" type="video/mp4" />
+                  <video id="hero-video-screen" class="w-full h-56 sm:h-64 object-cover" autoplay muted loop playsinline preload="auto">
+                    <source src="https://cdn.discordapp.com/attachments/1462126362281382021/1462242774156972279/hero-smp.mp4?ex=696d7b34&is=696c29b4&hm=2ae9655ba07f0b510452b133d1ec0bf65908b75b47db870cf5b01573750b274c&" type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                   <div class="absolute bottom-2 left-2 text-[10px] bg-black/70 px-2 py-1 rounded-md text-pink-100">In‑game footage • SMP spawn fly‑through</div>
@@ -467,8 +467,11 @@
           </div>
           <!-- Preview küçük ve ortalı -->
           <div class="flex justify-center mb-4">
-            <div class="inline-block bg-black/60 border border-white/10 rounded-lg p-2 shadow-cute">
-              <img src="assets/launcher-preview.png" alt="CutieClient launcher screenshot" class="max-w-full h-auto sm:max-w-md md:max-w-lg object-contain rounded-md" />
+            <div class="inline-block bg-black/60 border border-white/10 rounded-lg p-2 shadow-cute overflow-hidden">
+              <video id="modal-video" class="max-w-full h-auto sm:max-w-md md:max-w-lg object-contain rounded-md" autoplay muted loop playsinline preload="auto">
+                <source src="https://cdn.discordapp.com/attachments/1453798097623715851/1454183579104968848/hero-smp.mp4?ex=6950297e&is=694ed7fe&hm=aa4c4d0082f1b58b9daa5beb594505b77b2dc4d9ec14dc55be976bbe2f37b33f&" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
             </div>
           </div>
           <div class="grid sm:grid-cols-3 gap-3 mb-4 text-[11px] sm:text-xs text-pink-100/90">
@@ -512,6 +515,30 @@
       setTimeout(() => {
         topLoader.style.opacity = "0";
       }, 400);
+    });
+
+    // Video otomatik başlatma
+    document.addEventListener("DOMContentLoaded", () => {
+      const heroVideo = document.getElementById("hero-video-screen");
+      if (heroVideo) {
+        heroVideo.play().catch(e => {
+          console.log("Video autoplay prevented, trying again...");
+          // Kullanıcı etkileşimi sonrası tekrar dene
+          setTimeout(() => {
+            heroVideo.play().catch(err => console.log("Video play error:", err));
+          }, 100);
+        });
+      }
+    });
+
+    // Sayfa yüklendiğinde de video başlat
+    window.addEventListener("load", () => {
+      const heroVideo = document.getElementById("hero-video-screen");
+      if (heroVideo) {
+        heroVideo.play().catch(e => {
+          console.log("Video autoplay prevented");
+        });
+      }
     });
 
     document.getElementById("mobile-menu-btn")?.addEventListener("click", () => {
@@ -632,6 +659,13 @@
       modalBackdrop.setAttribute("aria-hidden", "false");
       modalPanel.classList.add("modal-open");
       document.body.style.overflow = "hidden";
+      // Modal videoyu başlat
+      const modalVideo = document.getElementById("modal-video");
+      if (modalVideo) {
+        modalVideo.play().catch(e => {
+          console.log("Modal video autoplay prevented");
+        });
+      }
     }
 
     function closeModal() {
